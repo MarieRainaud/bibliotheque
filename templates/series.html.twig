@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% block title %}Séries{% endblock %}
+{% block body %}
+<div class="page-heading"><h1>Séries</h1></div>
+<div data-series-dashboard="{{ path('series',{fragment:1}) }}">
+  {% include '_series_cards.html.twig' %}
+</div>
+{% endblock %}

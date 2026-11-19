@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Rechercher un livre{% endblock %}
+{% block body %}
+<div class="page-heading">
+  <h1>Rechercher un livre</h1>
+  <a class="button" href="{{ path('book_new',{manuel:1}) }}">Ajouter manuellement</a>
+</div>
+{% if error is defined and error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+<form class="catalog-search" method="get" role="search" aria-label="Recherche de livres" data-google-search>
+  <div><label for="catalogue-title">Titre</label><input id="catalogue-title" name="title" type="search" maxlength="200"></div>
+  <div><label for="catalogue-author">Auteur</label><input id="catalogue-author" name="author" type="search" maxlength="200"></div>
+  <div><label for="catalogue-isbn">ISBN</label><input id="catalogue-isbn" name="isbn" type="search" maxlength="30"></div>
+  <div class="search-actions">
+    <button type="submit" class="primary">Rechercher</button>
+    <button type="reset">Réinitialiser</button>
+  </div>
+</form>
+<section class="collection" aria-label="Résultats de recherche">
+  <p data-google-status role="status" aria-live="polite"></p>
+  <div data-google-results class="google-results"></div>
+  <button type="button" data-google-more hidden>Voir les résultats suivants</button>
+</section>
+{% endblock %}

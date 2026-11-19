@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+<rect width="300" height="450" fill="#404b65"/>
+<path d="M12 0v450" stroke="#d4bba1" stroke-opacity=".15" stroke-width="2"/>
+<rect x="25" y="25" width="250" height="400" fill="none" stroke="#d4bba1" stroke-opacity=".4"/>
+<g fill="#d4bba1" color="#d4bba1">
+<text x="150" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="16">Élise Beaumont</text>
+<text x="150" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="27"><tspan x="150" dy="0">La cité du vent</tspan></text>
+<text x="150" y="182" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="1">LES ÎLES SUSPENDUES · TOME 2</text>
+<path d="M-20 249Q60 222 140 245T330 234M-20 270Q70 244 150 267T330 256M-20 363Q70 338 150 361T330 349" fill="none" stroke="currentColor" opacity=".4"/>
+ <path d="M55 328l48 18h86l56-18-29 42h-111z" fill="currentColor" opacity=".65"/>
+ <g stroke="currentColor" stroke-width="2" fill="none"><path d="M77 328v-49h29v49M116 338V244l19-20 19 20v94M164 338v-65h28v65M202 328v-32h27v32M135 224v-25l29 11-29 9"/><path d="M85 290h12M85 305h12M127 259h16M127 277h16M127 295h16M174 287h9M174 305h9"/></g>
+</g></svg>

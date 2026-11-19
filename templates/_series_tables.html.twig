@@ -1,0 +1,71 @@
+{% macro title(row) %}
+  {% if row.book_id %}<a href="{{ path('book_show',{id:row.book_id}) }}">{{ row.title }}</a>
+  {% elseif row.reference %}<a href="{{ path('book_new',{reference:row.reference,suggestion:row.suggestion_id}) }}">{{ row.title }}</a>
+  {% else %}{{ row.title }}{% endif %}
+{% endmacro %}
+{% macro release(value) %}
+  {% if value|length == 10 and value matches '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/' %}{{ value|date('d/m/Y') }}
+  {% elseif value|length == 7 and value matches '/^[0-9]{4}-[0-9]{2}$/' %}{{ value|slice(5,2) }}/{{ value|slice(0,4) }}
+  {% else %}{{ value ?: 'Date non annoncée' }}{% endif %}
+{% endmacro %}
+{% import _self as display %}
+<section class="panel series-card">
+  {% if group.check_error %}
+  <p class="error-text">{{ group.check_error }}</p>
+  {% endif %}
+  {% include '_series_progress.html.twig' %}
+  <h2>Livres parus</h2>
+  {% if group.published_books %}
+  <div class="series-table-wrap">
+    <table class="series-table">
+      <thead>
+        <tr>
+          <th scope="col">Tome</th>
+          <th scope="col">Livre</th>
+          <th scope="col">Possédé</th>
+          <th scope="col">Lu</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in group.published_books %}
+        <tr data-book-state data-book-id="{{ row.book_id }}" data-reference="{{ row.reference }}" data-suggestion="{{ row.suggestion_id }}">
+          <td>{{ row.volume is not null ? (row.volume+0)|replace({'.': ','}) : 'Non indiqué' }}</td>
+          <th scope="row">{{ display.title(row) }}</th>
+          <td><input type="checkbox" data-book-flag="owned" aria-label="Possédé : {{ row.title }}"{% if row.owned %}
+              checked{% endif %}{% if not row.book_id and not row.reference %} disabled{% endif %}></td>
+          <td><input type="checkbox" data-book-flag="read" aria-label="Lu : {{ row.title }}"{% if row.read %}
+              checked{% endif %}{% if not row.book_id and not row.reference %} disabled{% endif %}></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Aucun tome paru recensé.</p>
+  {% endif %}
+  <h2>À paraître</h2>
+  {% if group.upcoming_books %}
+  <div class="series-table-wrap">
+    <table class="series-table">
+      <thead>
+        <tr>
+          <th scope="col">Tome</th>
+          <th scope="col">Livre</th>
+          <th scope="col">Sortie prévue</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in group.upcoming_books %}
+        <tr>
+          <td>{{ row.volume is not null ? (row.volume+0)|replace({'.': ','}) : 'Non indiqué' }}</td>
+          <th scope="row">{{ display.title(row) }}</th>
+          <td>{{ display.release(row.date) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Aucune parution annoncée.</p>
+  {% endif %}
+</section>

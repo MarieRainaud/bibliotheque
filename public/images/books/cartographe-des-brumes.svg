@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+<rect width="300" height="450" fill="#314c61"/>
+<path d="M12 0v450" stroke="#a9d0cf" stroke-opacity=".15" stroke-width="2"/>
+<rect x="25" y="25" width="250" height="400" fill="none" stroke="#a9d0cf" stroke-opacity=".4"/>
+<g fill="#a9d0cf" color="#a9d0cf">
+<text x="150" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="16">Élise Beaumont</text>
+<text x="150" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="27"><tspan x="150" dy="0">La cartographe</tspan><tspan x="150" dy="34">des brumes</tspan></text>
+
+<path d="M-20 288Q60 210 145 260T340 232M-20 320Q80 249 170 300T340 272M-20 352Q80 286 170 332T340 307" fill="none" stroke="currentColor" opacity=".35"/>
+ <path d="M45 287l22-38 28 9 12 33-34 14zM167 353l31-30 39 17-19 24-39 5zM194 241l14-22 29 4 8 21-29 9z" fill="currentColor" opacity=".7"/>
+ <path d="M75 272Q220 267 210 238T203 345" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 6"/>
+ <g transform="translate(248 370)" fill="none" stroke="currentColor"><circle r="22"/><path d="M0-28V28M-28 0H28M-12-12l24 24M12-12l-24 24"/></g>
+</g></svg>

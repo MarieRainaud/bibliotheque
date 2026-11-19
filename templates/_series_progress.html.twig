@@ -1,0 +1,16 @@
+{% set total = group.published_books|length %}
+{% if total %}
+  
+  <div class="series-meter">
+    <div class="series-meter-track"  role="img" aria-label="{{ group.read_count }} tomes lus, {{ group.owned_count }} possédés, sur {{ total }} parus">
+      <progress class="series-owned" max="{{ total }}" value="{{ group.owned_count }}" aria-hidden="true"/>
+      </progress>
+      <progress class="series-read" max="{{ total }}" value="{{ group.read_count }}" aria-hidden="true"/>
+    </progress>
+    </div>
+    <div class="series-meter-labels" aria-hidden="true">
+      <span class="series-read">Lus {{ group.read_count }} / {{ total }}</span>
+      <span class="series-owned">Possédés {{ group.owned_count }} / {{ total }}</span>
+    </div>
+  </div>
+{% endif %}

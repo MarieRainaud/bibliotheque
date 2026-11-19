@@ -1,0 +1,32 @@
+# Préparation SC. La mise en ligne est exécutée par l’utilisatrice.
+services:
+  bibliotheque-partage:
+    container_name: bibliotheque
+    cpus: '0.1'
+    mem_limit: 256m
+    build: .
+    ports:
+      - '8080:8080'
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: '0'
+      APP_SECRET: '${APP_SECRET:?APP_SECRET nécessaire}'
+      APP_URL: '${APP_URL:?APP_URL nécessaire}'
+      DB_HOST: atelier-mariadb
+      DB_PORT: '3306'
+      DB_NAME: bibliotheque
+      DB_USER: bibliotheque
+      DB_PASSWORD: '${DB_PASSWORD}'
+      OIDC_ISSUER: '${OIDC_ISSUER:?OIDC_ISSUER nécessaire}'
+      OIDC_CLIENT_ID: bibliotheque
+      OIDC_CLIENT_SECRET: '${OIDC_CLIENT_SECRET:?OIDC_CLIENT_SECRET nécessaire}'
+      GOOGLE_BOOKS_API_KEY: '${GOOGLE_BOOKS_API_KEY:-}'
+      PORTFOLIO_URL: '${PORTFOLIO_URL:-}'
+      ATELIER_URL: '${ATELIER_URL:?ATELIER_URL nécessaire}'
+    networks:
+      - default
+
+networks:
+  default:
+    external: true
+

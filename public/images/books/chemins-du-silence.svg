@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+<rect width="300" height="450" fill="#374c50"/>
+<path d="M12 0v450" stroke="#c3d4bd" stroke-opacity=".15" stroke-width="2"/>
+<rect x="25" y="25" width="250" height="400" fill="none" stroke="#c3d4bd" stroke-opacity=".4"/>
+<g fill="#c3d4bd" color="#c3d4bd">
+<text x="150" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="16">Noé Laurent</text>
+<text x="150" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="27"><tspan x="150" dy="0">Sur les chemins</tspan><tspan x="150" dy="34">du silence</tspan></text>
+
+<circle cx="151" cy="258" r="35" fill="currentColor" opacity=".5"/>
+ <path d="M-10 335l81-80 60 65 52-34 127 58v78H-10z" fill="currentColor" opacity=".25"/>
+ <path d="M-10 373l86-43 72 23 69-38 93 63v44H-10z" fill="currentColor" opacity=".4"/>
+ <path d="M126 422Q204 376 156 359Q112 343 148 321" fill="none" stroke="currentColor" stroke-width="5"/>
+ <g stroke="currentColor" stroke-width="2" fill="none"><path d="M45 380v-73M25 344l20-37 20 37M24 360l21-38 21 38M255 391v-81M234 350l21-40 21 40M231 369l24-43 24 43"/></g>
+</g></svg>

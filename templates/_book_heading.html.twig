@@ -1,0 +1,68 @@
+<div class="book-heading">
+  <div class="detail-cover">
+    {% include '_cover.html.twig' %}
+  </div>
+  <div>
+    {% if personal %}
+    <div class="card-tags">
+      <span>{{ formats[book.format] }}</span>
+      <span data-book-wishlist{% if book.owned %} hidden{% endif %}>Non possédé</span>
+    </div>
+    {% endif %}
+    <h1>{{ book.title }}</h1>
+    {% if book.subtitle|default %}
+    <p>{{ book.subtitle }}</p>
+    {% endif %}
+    {% if book.authors %}
+    <p class="detail-author">{{ book.authors }}</p>
+    {% endif %}
+    <dl class="book-metadata">
+      {% if series_link %}
+      <div>
+        <dt>Série</dt>
+        <dd>{{ series_link.name }}{% if series_link.volume is not null %} · Tome {{ (series_link.volume+0)|replace({'.': ','}) }}{% endif %}</dd>
+      </div>
+      {% endif %}
+      {% if book.publisher %}
+      <div>
+        <dt>Éditeur</dt>
+        <dd>{{ book.publisher }}</dd>
+      </div>
+      {% endif %}
+      {% if book.published %}
+      <div>
+        <dt>Parution</dt>
+        <dd>{{ book.published matches '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/' ? book.published|date('d/m/Y') : book.published }}</dd>
+      </div>
+      {% endif %}
+      {% set pages = book.page_count|default(personal and book.unit == 'pages' ? book.total : null) %}
+      {% if pages %}
+      <div>
+        <dt>Pagination</dt>
+        <dd>{{ pages|progress_label('pages') }}</dd>
+      </div>
+      {% endif %}
+      {% if book.language|lower starts with 'fr' %}
+      <div>
+        <dt>Langue</dt>
+        <dd>Français</dd>
+      </div>
+      {% endif %}
+      {% if book.isbn %}
+      <div>
+        <dt>ISBN</dt>
+        <dd>{{ book.isbn }}</dd>
+      </div>
+      {% endif %}
+      {% set genre = book.genre|genre_label(book.google_id is not empty) %}
+      {% if genre %}
+      <div class="book-metadata-genre">
+        <dt>Genre</dt>
+        <dd>{{ genre }}</dd>
+      </div>
+      {% endif %}
+    </dl>
+    {% block book_actions %}
+    {% endblock %}
+  </div>
+</div>

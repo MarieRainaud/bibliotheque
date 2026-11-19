@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ma bibliothèque{% endblock %}
+{% block body %}
+<div class="page-heading">
+  <h1>Ma bibliothèque</h1>
+</div>
+<form class="catalog-search" method="get" role="search" data-filters id="library-filters">
+  <input type="hidden" name="sort" value="{{ filters.sort }}">
+  <div class="search-field">
+    <label for="q">Rechercher dans ma bibliothèque</label>
+    <input id="q" name="q" value="{{ filters.q }}" placeholder="Titre, auteur, série ou ISBN" type="search" maxlength="200">
+  </div>
+  <div>
+    <label for="status">Lecture</label>
+    <select id="status" name="status">
+      <option value="">Tous les statuts</option>
+      {% for value,label in statuses %}
+      <option value="{{ value }}" {% if filters.status==value %}selected{% endif %}>{{ label }} ({{ stats[value] }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="format">Support</label>
+    <select id="format" name="format">
+      <option value="">Tous les supports</option>
+      {% for value,label in formats %}
+      <option value="{{ value }}" {% if filters.format==value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="series">Série</label>
+    <select id="series" name="series">
+      <option value="">Toutes les séries</option>
+      {% for s in series %}
+      <option value="{{ s.id }}" {% if filters.series==s.id ~ '' %}selected{% endif %}>{{ s.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="owned">Bibliothèque</label>
+    <select id="owned" name="owned">
+      <option value="">Tous les livres</option>
+      <option value="1" {% if filters.owned=='1' %}selected{% endif %}>Livres possédés</option>
+      <option value="0" {% if filters.owned=='0' %}selected{% endif %}>Livres non possédés</option>
+    </select>
+  </div>
+  <div class="search-actions">
+    <button class="primary">Rechercher</button>
+    {% if filters.q or filters.status or filters.format or filters.series or filters.owned is not same as('') or filters.sort not in ['', 'recent'] %}
+    <a class="button" href="{{ path('home') }}">Réinitialiser</a>
+    {% endif %}
+  </div>
+</form>
+<section class="collection" aria-label="Livres">
+  <div class="collection-toolbar">
+    <p class="result-count" role="status">{{ books|length }} livre{{ books|length != 1 ? 's' : '' }}{% if filters.q %} dans ma bibliothèque{% endif %}</p>
+    <form class="sort-form" method="get" data-filters>
+      {% for key in ['q','status','format','series','owned'] %}
+      <input type="hidden" name="{{ key }}" value="{{ filters[key] }}">
+      {% endfor %}
+      <label for="sort">Trier par</label>
+      <select id="sort" name="sort">
+        <option value="recent" {% if filters.sort in ['recent',''] %}selected{% endif %}>Ajout récent</option>
+        <option value="title" {% if filters.sort=='title' %}selected{% endif %}>Titre de A à Z</option>
+        <option value="author" {% if filters.sort=='author' %}selected{% endif %}>Auteur</option>
+        <option value="progress" {% if filters.sort=='progress' %}selected{% endif %}>Lecture mise à jour</option>
+      </select>
+      <noscript>
+        <button>Trier</button>
+      </noscript>
+    </form>
+  </div>
+  <div class="book-grid">
+    {% for book in books %}
+    {% include '_book_card.html.twig' %}
+    {% else %}
+    <div class="empty-state">
+      <h2>{{ total_books ? 'Aucun livre trouvé dans ma bibliothèque' : 'Aucun livre dans ma bibliothèque' }}</h2>
+      {% if total_books %}
+      <a class="button" href="{{ path('home') }}">Réinitialiser la recherche</a>
+      {% else %}
+      <a class="button" href="{{ path('catalogue_search') }}">Rechercher un livre</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

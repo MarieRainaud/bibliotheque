@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouveautés{% endblock %}
+{% block body %}
+<div class="page-heading">
+  <h1>Nouveautés</h1>
+  <button data-refresh-news type="button">Actualiser les nouveautés</button>
+</div><p class="discovery-status" data-discovery-status role="status" aria-live="polite"></p>
+<nav class="tabs" aria-label="Propositions">
+  <a href="{{ path('news') }}" {% if state=='pending' %}aria-current="page"{% endif %}>À vérifier</a>
+  <a href="{{ path('news',{etat:'accepted'}) }}" {% if state=='accepted' %}aria-current="page"{% endif %}>Ajoutées</a>
+  <a href="{{ path('news',{etat:'dismissed'}) }}" {% if state=='dismissed' %}aria-current="page"{% endif %}>Écartées</a>
+</nav>
+{% if suggestions %}<div class="suggestion-grid">
+  {% for suggestion in suggestions %}
+  <article class="panel suggestion-card">
+    <span class="tag">{{ suggestion.series_name }}</span>
+    <h2>{{ suggestion.title }}</h2>
+    <p>{{ suggestion.authors }}</p>
+    {% if suggestion.volume %}
+    <p>Tome {{ suggestion.volume+0 }}</p>
+    {% endif %}
+    {% if suggestion.published %}
+    <p class="muted">Publication annoncée · {{ suggestion.published }}</p>
+    {% endif %}
+    <p class="small">{{ suggestion.reason }}</p>
+    <div class="actions">
+      {% if state=='pending' %}
+      <a class="button primary" href="{{ path('book_new',{reference:suggestion.google_id,suggestion:suggestion.id}) }}">Voir la fiche</a>
+      <form action="{{ path('suggestion_action',{id:suggestion.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf }}">
+        <button name="action" value="dismiss">Écarter</button>
+      </form>
+      {% elseif state=='dismissed' %}
+      <form action="{{ path('suggestion_action',{id:suggestion.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf }}">
+        <button name="action" value="restore">Réexaminer</button>
+      </form>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>{% else %}<div class="empty-state">
+  <h2>{{ state=='pending' ? 'Aucune nouveauté à vérifier':'Aucune proposition dans cette liste' }}</h2>
+  <p>{{ series ? 'Les séries suivies sont vérifiées à la connexion, au maximum une fois par jour.' : 'Ajouter une série pour commencer la recherche des prochains tomes.' }}</p>
+  <a class="button" href="{{ path('series') }}">Voir les séries</a>
+</div>{% endif %}
+{% endblock %}

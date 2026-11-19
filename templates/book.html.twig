@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block body %}
+{% if personal %}<a class="button" href="{{ return_url }}">Retour aux livres</a>{% endif %}
+{% if error is defined and error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+{% embed '_book_heading.html.twig' %}
+  {% block book_actions %}
+    {% if personal %}
+      <div class="book-flags" data-book-state data-book-id="{{ book.id }}">
+  <label><input type="checkbox" data-book-flag="owned"{% if book.owned %} checked{% endif %}> Possédé</label>
+  <label><input type="checkbox" data-book-flag="read"{% if book.ever_read %} checked{% endif %}> Lu</label>
+</div>
+    {% endif %}
+    <div class="actions">
+  {% if series_link %}
+  <a class="button" href="{{ series_link.url }}">Voir la série</a>
+  {% endif %}
+  {% if personal %}
+  <a class="button" href="{{ path('book_edit',{id:book.id}) }}">Modifier</a>
+  <form method="post" action="{{ path('book_delete',{id:book.id}) }}"
+    data-confirm="Retirer ce livre de ma bibliothèque ? Son historique de lecture sera supprimé.">
+    <input type="hidden" name="_token" value="{{ csrf }}">
+    <button class="danger">Retirer ce livre de ma bibliothèque</button>
+  </form>
+  {% else %}
+  <form class="catalogue-add" method="post" action="{{ path('book_new',{reference:book.google_id,suggestion:suggestion_id ?: null}) }}">
+    <input type="hidden" name="_token" value="{{ csrf }}">
+    <div class="book-flags">
+      <label><input type="checkbox" name="owned" value="1"{% if book.owned|default(false) %} checked{% endif %}> Possédé</label>
+      <label><input type="checkbox" name="read" value="1"{% if book.status|default('')=='finished' %} checked{% endif %}> Lu</label>
+    </div>
+    {% if series_proposal %}
+    {% if not series_proposal.followed %}
+    <label class="check-field series-choice"><input type="checkbox" name="follow_series" value="1"> Ajouter la série « {{ series_proposal.name }} » et suivre ses nouveautés</label>
+    {% endif %}
+    {% endif %}
+    <button class="primary">Ajouter à ma bibliothèque</button>
+  </form>
+  {% endif %}
+</div>
+  {% endblock %}
+{% endembed %}
+{% if book.description or book.google_id %}
+  <section class="panel">
+  <h2>Résumé</h2>
+  {% if book.description %}
+  <p class="preserve-lines">{{ book.description }}</p>
+  {% else %}
+  <p>Aucun résumé en français disponible.</p>
+  {% endif %}
+</section>
+{% endif %}
+{% include '_editions.html.twig' %}
+{% if personal %}
+<div class="detail-columns">
+  <div>
+    <section class="panel reading-panel">
+      <div data-reading-summary>
+        {% include '_reading_summary.html.twig' %}
+      </div>
+      <form method="post" action="{{ path('reading_update',{id:book.id}) }}" data-reading-form>
+        <input type="hidden" name="_token" value="{{ csrf }}">
+        <div class="form-grid">
+          <div>
+            <label for="status">Statut</label>
+            <select id="status" name="status">
+              {% for value,label in statuses %}
+              <option value="{{ value }}" {% if current.status==value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% if book.unit=='percent' %}
+          <div>
+            <a class="button" href="{{ path('book_edit',{id:book.id}) }}#unit">Choisir un repère de lecture</a>
+          </div>
+          {% else %}
+          <div>
+            <label for="position">{{ position_labels[book.unit] }}</label>
+            <input id="position" name="position" type="number" step="0.01" min="0" {% if book.total %}max="{{ book.total }}"{% endif %}
+              value="{{ current.position+0 }}">
+          </div>
+          {% endif %}
+          <div>
+            <label for="started">Début</label>
+            <input id="started" name="started" type="date" value="{{ current.started }}">
+          </div>
+          <div>
+            <label for="finished">Fin</label>
+            <input id="finished" name="finished" type="date" value="{{ current.finished }}">
+          </div>
+          <div>
+            <label for="rating">Note personnelle</label>
+            <select id="rating" name="rating">
+              <option value="">Sans note</option>
+              {% for n in 1..5 %}
+              <option value="{{ n }}" {% if current.rating==n %}selected{% endif %}>{{ n }} / 5</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="wide">
+            <label for="notes">Notes de lecture</label>
+            <textarea id="notes" name="notes" rows="4" maxlength="20000">{{ current.notes }}</textarea>
+          </div>
+          <div class="wide">
+            <label for="review">Avis personnel</label>
+            <textarea id="review" name="review" rows="4" maxlength="10000">{{ current.review }}</textarea>
+          </div>
+        </div>
+        <button class="primary">Enregistrer la lecture</button>
+      </form>
+      <form class="reread-form" data-reread-form{% if current.status!='finished' %} hidden{% endif %}
+        action="{{ path('reread',{id:book.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf }}">
+        <button>Commencer une relecture</button>
+        <p class="help">Cette lecture et son avis seront conservés.</p>
+      </form>
+    </section>
+  </div>
+  <aside>
+    <section class="panel">
+      <h2>Historique des lectures</h2>
+      {% for reading in readings %}
+      <div class="history-item"{% if loop.first %} data-current-reading{% endif %}>
+        <span class="status status-{{ reading.status }}">{{ statuses[reading.status] }}</span>
+        <p>{% if reading.started %}{{ reading.started|date('d/m/Y') }}{% else %}Début non renseigné{% endif %}{% if reading.finished %} au {{ reading.finished|date('d/m/Y') }}{% endif %}</p>
+        {% if reading.rating %}
+        <p class="rating">{{ reading.rating }}/5</p>
+        {% endif %}
+        {% if not loop.first %}
+        {% if reading.review %}
+        <p class="preserve-lines">{{ reading.review }}</p>
+        {% endif %}
+        {% if reading.notes %}
+        <details>
+          <summary>Notes de lecture</summary>
+          <p class="preserve-lines">{{ reading.notes }}</p>
+        </details>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+    <section class="panel">
+      <h2>Derniers repères</h2>
+      {% for point in progress %}
+      <div class="progress-entry">
+        <span>{{ point.position|progress_label(book.unit) }}</span>
+        <time>{{ point.recorded_at|date('d/m/Y') }}</time>
+      </div>
+      {% endfor %}
+    </section>
+  </aside>
+</div>
+{% endif %}
+{% set relation_query = personal ? {id:book.id} : {reference:book.google_id} %}
+{% include '_book_relations.html.twig' with {relations_url:path('book_relations',relation_query)} %}
+{% endblock %}

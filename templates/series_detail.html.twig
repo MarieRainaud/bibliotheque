@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ group.name }}{% endblock %}
+{% block body %}
+<a class="button" href="{{ book_url ?: path('series') }}">{{ book_url ? 'Retour au livre' : 'Toutes les séries' }}</a>
+<div class="page-heading">
+  <h1>{{ group.name }}</h1>
+  {% if group.id %}
+    <div class="page-heading-actions">
+      {% if group.followed %}<button type="button" data-refresh-news>Actualiser les parutions</button>{% endif %}
+      <form method="post" action="{{ path('series') }}">
+        <input type="hidden" name="_token" value="{{ csrf }}">
+        <input type="hidden" name="id" value="{{ group.id }}">
+        <input type="hidden" name="followed" value="{{ group.followed ? 0 : 1 }}">
+        <button>{{ group.followed ? 'Mettre le suivi en pause' : 'Suivre les nouveautés' }}</button>
+      </form>
+    </div>
+  {% endif %}
+</div>
+{% if group.author %}<p class="detail-author">{{ group.author }}</p>{% endif %}
+{% if group.id %}<p class="discovery-status" data-discovery-status role="status" aria-live="polite"></p>{% endif %}
+<div data-series-view data-series-dashboard="{{ fragment_url }}">
+  {% include '_series_tables.html.twig' %}
+</div>
+{% endblock %}

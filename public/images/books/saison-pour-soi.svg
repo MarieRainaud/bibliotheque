@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+<rect width="300" height="450" fill="#644b4d"/>
+<path d="M12 0v450" stroke="#e6c6ae" stroke-opacity=".15" stroke-width="2"/>
+<rect x="25" y="25" width="250" height="400" fill="none" stroke="#e6c6ae" stroke-opacity=".4"/>
+<g fill="#e6c6ae" color="#e6c6ae">
+<text x="150" y="66" text-anchor="middle" font-family="Georgia,serif" font-size="16">Camille Aubert</text>
+<text x="150" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="27"><tspan x="150" dy="0">Une saison</tspan><tspan x="150" dy="34">pour soi</tspan></text>
+
+<circle cx="150" cy="302" r="75" fill="none" stroke="currentColor" opacity=".35"/>
+ <g stroke="currentColor" stroke-width="2" fill="none"><path d="M92 397Q169 331 208 223M134 351Q92 344 80 310Q117 302 134 351M162 313Q119 293 124 263Q159 268 162 313M184 270Q155 241 172 217Q204 229 184 270M148 335Q189 350 214 318Q192 294 148 335M176 291Q219 300 231 270Q207 251 176 291"/></g>
+</g></svg>

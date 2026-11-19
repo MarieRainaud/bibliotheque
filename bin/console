@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+require dirname(__DIR__).'/bootstrap.php';
+exit((new Symfony\Bundle\FrameworkBundle\Console\Application(new App\Kernel($_SERVER['APP_ENV'],(bool)$_SERVER['APP_DEBUG'])))->run());

@@ -1,0 +1,20 @@
+name: bibliotheque-local
+services:
+  bibliotheque-db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: bibliotheque
+      MARIADB_USER: bibliotheque
+      MARIADB_PASSWORD: '${DB_PASSWORD:?DB_PASSWORD nécessaire}'
+      MARIADB_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD nécessaire}'
+    ports:
+      - '127.0.0.1:${DB_PORT:-13310}:3306'
+    volumes:
+      - bibliotheque-local-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD-SHELL', 'MYSQL_PWD="$$MARIADB_PASSWORD" mariadb -h 127.0.0.1 -u "$$MARIADB_USER" "$$MARIADB_DATABASE" -Nse "SELECT 1" >/dev/null']
+      interval: 3s
+      timeout: 3s
+      retries: 40
+volumes:
+  bibliotheque-local-data:

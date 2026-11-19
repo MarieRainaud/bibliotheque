@@ -1,0 +1,7 @@
+{% if book.google_id %}
+<details class="panel book-editions" data-editions-url="{{ path('catalogue_editions',{reference:book.google_id}) }}">
+  <summary>Éditions</summary>
+  <p data-editions-status role="status"></p>
+  <ul class="edition-list" data-editions-list></ul>
+</details>
+{% endif %}

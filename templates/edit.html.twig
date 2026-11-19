@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ editing ? 'Modifier le suivi':'Ajouter un livre' }}{% endblock %}
+{% block body %}
+<a class="button" href="{{ path('home') }}">Ma bibliothèque</a><div class="page-heading">
+  <h1>{{ editing ? 'Modifier le suivi':'Ajouter un livre' }}</h1>
+</div>
+{% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+<form method="post" class="book-form" data-book-form>
+  <input type="hidden" name="_token" value="{{ csrf }}">
+  {% if not locked_metadata %}
+  <section class="panel">
+    <h2>Le livre</h2>
+    <div class="form-grid">
+      <div class="wide">
+        <label for="title">Titre <span class="required">*</span></label>
+        <input id="title" name="title" value="{{ book.title }}" maxlength="250" required>
+      </div>
+      <div class="wide">
+        <label for="authors">Auteur ou auteurs</label>
+        <input id="authors" name="authors" value="{{ book.authors }}" maxlength="500">
+      </div>
+      <div>
+        <label for="isbn">ISBN</label>
+        <input id="isbn" name="isbn" value="{{ book.isbn }}" maxlength="30">
+      </div>
+      <div>
+        <label for="genre">Genre</label>
+        <input id="genre" name="genre" value="{{ book.genre }}" maxlength="120">
+      </div>
+      <div>
+        <label for="publisher">Éditeur</label>
+        <input id="publisher" name="publisher" value="{{ book.publisher }}" maxlength="200">
+      </div>
+      <div>
+        <label for="published">Date de publication</label>
+        <input id="published" name="published" value="{{ book.published }}" placeholder="Année ou date" maxlength="30">
+      </div>
+      <div class="wide">
+        <label for="description">Résumé</label>
+        <textarea id="description" name="description" rows="4" maxlength="15000">{{ book.description }}</textarea>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  <section class="panel">
+    <h2>Dans ma bibliothèque</h2>
+    <div class="form-grid">
+      <div>
+        <label for="format">Support</label>
+        <select id="format" name="format" data-format>
+          {% for value,label in formats %}
+          <option value="{{ value }}" data-default-unit="{{ default_units[value] }}" {% if book.format==value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="unit">Repère de progression</label>
+        <select id="unit" name="unit" data-unit>
+          {% for value,label in units %}
+          <option value="{{ value }}" data-total-label="{{ total_labels[value] }}" data-position-label="{{ position_labels[value] }}"
+            {% if book.unit==value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="total" data-unit-label>{{ total_labels[book.unit]|default('Total') }}</label>
+        <input type="number" step="0.01" min="0.01" max="9999999" id="total" name="total" value="{{ book.total }}" data-total>
+        <span class="help">{{ legacy_percent ? 'Le total permet de convertir la progression enregistrée en pourcentage.' : 'Peut rester vide si le total est inconnu.' }}</span>
+      </div>
+      <div class="check-field">
+        <label><input type="checkbox" name="owned" value="1" {% if book.owned %}checked{% endif %}> Possédé</label>
+        {% if not editing %}
+        <label><input type="checkbox" name="read" value="1"> Lu</label>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% if not editing %}
+  <section class="panel">
+    <h2>Lecture</h2>
+    <div class="form-grid">
+      <div>
+        <label for="status">Statut</label>
+        <select id="status" name="status">
+          {% for value,label in statuses %}
+          <option value="{{ value }}" {% if book.status==value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="position" data-position-label>{{ position_labels[book.unit]|default('Position atteinte') }}</label>
+        <input id="position" name="position" type="number" min="0" step="0.01" value="{{ book.position }}">
+      </div>
+      <div>
+        <label for="started">Début de lecture</label>
+        <input id="started" name="started" type="date" value="{{ book.started }}">
+      </div>
+      <div>
+        <label for="finished">Fin de lecture</label>
+        <input id="finished" name="finished" type="date" value="{{ book.finished }}">
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  <div class="form-actions">
+    <a class="button" href="{{ editing ? path('book_show',{id:book.id}):path('home') }}">Annuler</a>
+    <button class="primary">{{ editing ? "Enregistrer" : "Ajouter à ma bibliothèque" }}</button>
+  </div>
+</form>
+{% endblock %}

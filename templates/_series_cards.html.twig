@@ -1,0 +1,20 @@
+{% if series %}
+  <ul class="series-index related-books">
+    {% for group in series %}
+      <li class="book-card">
+        <a class="card-link{% if not group.cover %} card-link-text{% endif %}" href="{{ path('series_show',{id:group.id}) }}">
+          {% if group.cover %}{% include '_cover.html.twig' with {book:group.cover} %}{% endif %}
+          <div class="card-content">
+            <h2>{{ group.name }}</h2>
+            {% if group.author %}<p class="author">{{ group.author }}</p>{% endif %}
+            {% if group.genre %}<p>{{ group.genre }}</p>{% endif %}
+            {% if group.excerpt %}<p>{{ group.excerpt }}</p>{% endif %}
+            {% include '_series_progress.html.twig' %}
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div class="empty-state"><h2>Aucune série dans ma bibliothèque</h2><a class="button" href="{{ path('catalogue_search') }}">Rechercher un livre</a></div>
+{% endif %}

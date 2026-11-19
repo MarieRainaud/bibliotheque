@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#22343c">
+    <meta name="description" content="Bibliothèque personnelle et suivi de lecture.">
+    <title>{% block title %}Bibliothèque{% endblock %} - L’atelier de ninette</title>
+    <link rel="icon" type="image/svg+xml" href="/images/logo-ninette.svg">
+    <link rel="stylesheet" href="/app.css?v=20261112-etats-livres">
+    <script type="module" src="/app.js?v=20261112-etats-livres"></script>
+    <link rel="stylesheet" href="/icons/icons.css">
+  </head>
+  <body data-csrf="{{ csrf }}" data-discovery="{{ account or demo ? 'yes' : 'no' }}">
+    <a class="skip-link" href="#content">Aller au contenu</a>
+    <div class="site-shell{% block shell_class %}{% endblock %}">
+      {% block site_header %}
+      <header class="site-header">
+        <nav aria-label="Navigation principale">
+          {% if account or demo %}
+          <a class="nav-button" href="{{ path('home') }}"
+            {% if app.request.attributes.get('_route') in ['home','book_show','book_edit'] %}aria-current="page"{% endif %}>Ma bibliothèque</a>
+          <a class="nav-button" href="{{ path('catalogue_search') }}"
+            {% if app.request.attributes.get('_route') in ['catalogue_search','book_new'] %}aria-current="page"{% endif %}>Recherche</a>
+          <a class="nav-button" href="{{ path('series') }}"
+            {% if app.request.attributes.get('_route') in ['series','series_show','series_catalogue'] %}aria-current="page"{% endif %}>Séries <span
+              class="count-badge" data-news-count {% if notification_count==0 %}hidden{% endif %}>{{ notification_count }}</span></a>
+          {% endif %}
+          {% if account %}
+          <details class="account-menu">
+            <summary>Compte</summary>
+            <div>
+              <a class="button" href="{{ atelier_url }}">Compte de l’atelier</a>
+              <a class="button" href="{{ path('export') }}">Exporter la bibliothèque</a>
+              <form action="{{ path('logout') }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf }}">
+                <button>Déconnexion</button>
+              </form>
+            </div>
+          </details>
+          {% elseif demo %}
+          <form action="{{ path('demo_exit') }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf }}">
+            <button class="nav-button">Quitter la démo</button>
+          </form>
+          <a class="nav-button login-link" href="{{ path('login') }}">Connexion</a>
+          {% else %}
+          <a class="nav-button login-link" href="{{ path('login') }}">Connexion</a>
+          {% endif %}
+        </nav>
+      </header>
+      {% endblock %}
+      <main id="content">
+        {% for message in app.flashes('success') %}
+        <p class="notice" role="status">{{ message }}</p>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+        <p class="notice error" role="alert">{{ message }}</p>
+        {% endfor %}
+        <p class="notice error" data-book-state-error role="alert" hidden></p>
+        {% block body %}
+        {% endblock %}
+      </main>
+      <footer class="site-footer">
+        <a class="footer-signature" href="https://portfolio--ninette.ctn.rs/"><img class="footer-logo" src="/images/logo-ninette.svg" alt=""
+            loading="lazy" decoding="async"><span>L’atelier de ninette</span></a>
+        <p class="footer-hosting">Hébergé par Simple Containers</p>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/marie-rainaud" target="_blank" rel="noreferrer" aria-label="LinkedIn, nouvel onglet">{% include '_linkedin.html.twig' %}<span>LinkedIn</span></a>
+          <a href="https://github.com/MarieRainaud" target="_blank" rel="noreferrer" aria-label="GitHub, nouvel onglet">{% include '_github.html.twig' %}<span>GitHub</span></a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

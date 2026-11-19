@@ -1,0 +1,11 @@
+<div class="section-heading">
+  <h2>Lecture actuelle</h2>
+  <span class="status status-{{ current.status }}">{{ statuses[current.status] }}</span>
+</div>
+{% if book.total %}
+{% set percent = min(100,current.position/book.total*100) %}
+<div class="progress-track large">
+  <span data-progress="{{ percent }}"></span>
+</div>
+{% endif %}
+<p class="progress-caption">{{ current.position|progress_label(book.unit) }}{% if book.total and book.unit!='percent' %} / {{ book.total|progress_label(book.unit) }} · {{ percent|round }} %{% endif %}</p>

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block shell_class %} entry-shell{% endblock %}
+{% block site_header %}
+<header class="app-header">
+  <div class="mode-line"><span class="mode-indicator" aria-hidden="true"></span>Espace personnel</div>
+  <h1><span class="image-icon icon-book-open" aria-hidden="true"></span>Bibliothèque</h1>
+  <p class="introduction">La bibliothèque et le suivi de lecture au même endroit.</p>
+</header>
+{% endblock %}
+{% block body %}
+<section class="panel account-entry">
+  <h2>Connexion</h2>
+  <div class="account-entry-actions">
+    <a class="button primary" href="{{ path('login') }}">Se connecter</a>
+    <a class="button" href="{{
+        path(
+          'login',
+          {
+            screen: 'register'
+          }
+        )
+        }}">Créer un compte</a>
+  </div>
+  <form class="demo-entry" action="{{ path('demo') }}" method="post">
+    <input type="hidden" name="_token" value="{{ csrf }}">
+    <button>Découvrir la démonstration avec des données fictives</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% set example_covers = {
+  'La cartographe des brumes': 'cartographe-des-brumes',
+  'Le jardin des heures': 'jardin-des-heures',
+  'Les îles suspendues - La cité du vent': 'cite-du-vent',
+  'Sur les chemins du silence': 'chemins-du-silence',
+  'Une saison pour soi': 'saison-pour-soi'
+} %}
+{% set example_cover = book.owner|default('') starts with 'demo:' ? example_covers[book.title]|default(null) : null %}
+<div class="book-cover">
+  <span class="cover-empty">Sans couverture</span>
+  {% if book.google_id %}
+  <img
+    src="https://books.google.com/books/content?id={{ book.google_id|url_encode }}&amp;printsec=frontcover&amp;img=1&amp;zoom=1&amp;source=gbs_api"
+    alt="Couverture de {{ book.title }}" loading="lazy" referrerpolicy="no-referrer" data-cover>
+  {% elseif example_cover %}
+  <img src="/images/books/{{ example_cover }}.svg" alt="Couverture de {{ book.title }}" loading="lazy" data-cover>
+  {% endif %}
+</div>

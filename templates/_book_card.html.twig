@@ -1,0 +1,34 @@
+<article class="book-card">
+  <a class="card-link" href="{{ path('book_show',{id:book.id}) }}" aria-label="{{ book.title }}">
+    {% include '_cover.html.twig' %}
+    <div class="card-content">
+      <div class="card-meta">
+        <span class="card-category">{{ formats[book.format] }}</span>
+        <span class="status status-{{ book.status }}">{{ statuses[book.status] }}</span>
+      </div>
+      <h2>{{ book.title }}</h2>
+      {% if book.authors %}
+      <p class="author">{{ book.authors }}</p>
+      {% endif %}
+      {% if book.series_name %}
+      <p class="series-label">{{ book.series_name }}{% if book.volume is not null %} · Tome {{ (book.volume + 0)|replace({'.': ','}) }}{% endif %}</p>
+      {% endif %}
+      {% if not book.owned %}
+      <p class="series-label">Non possédé</p>
+      {% endif %}
+      {% if book.rating %}
+      <p class="rating" aria-label="Note {{ book.rating }} sur 5">{{ book.rating }}/5</p>
+      {% endif %}
+      {% if book.status=='reading' %}
+      {% if book.total %}
+      {% set percent = min(100,book.position/book.total*100) %}
+      <div class="progress-track" role="progressbar" aria-label="Progression de lecture" aria-valuemin="0" aria-valuemax="{{ book.total }}"
+        aria-valuenow="{{ book.position }}">
+        <span data-progress="{{ percent }}"></span>
+      </div>
+      {% endif %}
+      <p class="progress-caption">{{ book.position|progress_label(book.unit) }}{% if book.total and book.unit!='percent' %} / {{ book.total|progress_label(book.unit) }} · {{ percent|round }} %{% endif %}</p>
+      {% endif %}
+    </div>
+  </a>
+</article>
